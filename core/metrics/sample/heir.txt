@@ -1,0 +1,6 @@
+
+// Exclude coverage for module testbench
+-module testbench
+
+// Include coverage for instance 
++tree testbench.uut

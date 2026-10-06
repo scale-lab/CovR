@@ -1,0 +1,48 @@
+DATASET:
+  SHUFFLE: True
+  TRAIN: "/oscar/data/sreda/mnouh/ScaleLab/LLM4TB/output/reasoning/data_generation_verithoughts_second_half/train_dataset_met_coverage_reasoner_v0_2_output_sdg_thinking.jsonl"
+  
+tokenizer:
+  padding_side: 'right'
+  use_fast: False 
+
+LLM:
+  NAME: 'qwen2.5-coder'
+  TEMP: 0.1
+
+lora:
+  lora_r: 64 
+  lora_alpha: 64 
+  lora_dropout: 0.1 
+  use_dora: False 
+  
+bnb: 
+  load_in_4bit: True 
+  bnb_4bit_quant_type: "nf4"
+  bnb_4bit_use_double_quant: True 
+  
+train:
+  epochs: 5
+  max_steps: -1               # make it -1 to use epochs
+  max_seq_length: 3028
+  batch_size: 4               
+  gradient_accumulation_steps: 2  # your effective batch size is batch_size*gradient_accumulation_steps
+  learning_rate: 0.00002 
+  report_to: "wandb"
+  gradient_checkpointing: True   ## Leads to reduction in memory but slows down training by 20% 
+  dataloader_num_workers: 0
+  evaluation_strategy: 'steps'
+  logging_strategy: 'steps'
+  save_strategy: 'steps'
+  logging_steps: 1
+  eval_steps: 20
+  save_steps: 20
+  load_best_model_at_end: True
+  lr_scheduler_type: 'linear'
+  run_name: qwen2.5-coder_reason_sft_sdg_thinking
+
+test:
+  batch_size: 4
+  num_samples: 5 # n for computing acc@k
+  max_seq_length: 32000
+  max_new_tokens: 10000

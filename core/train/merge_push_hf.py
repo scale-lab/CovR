@@ -1,0 +1,40 @@
+import torch
+from transformers import AutoModelForCausalLM, AutoTokenizer
+from peft import PeftModel
+
+base = "Qwen/Qwen2.5-Coder-7B-Instruct"
+
+# adapter = "/oscar/data/sreda/mabdelat/LLM4TB/output/sft/qwen2.5-coder_full_sft_r1024_a1024_completion_only_loss_full_data/qwen2.5-coder_full_sft_r1024_a1024_completion_only_loss_full_data_20260504_174138/Qwen/Qwen2.5-Coder-7B-Instruct_finetuned"
+# hub_id = "manarabdelatty/qwen2.5-coder-covr-completion-only-loss-r1024-merged"
+
+# adapter = "/oscar/data/sreda/mabdelat/LLM4TB/output/sft/qwen2.5-coder_full_sft_r1024_a1024_completion_only_loss_full_data/qwen2.5-coder_full_sft_r1024_a1024_completion_only_loss_full_data_20260504_174138/Qwen/Qwen2.5-Coder-7B-Instruct_finetuned"
+# hub_id = "manarabdelatty/qwen2.5-coder-covr-completion-only-loss-r1024-merged"
+
+# adapter = "/oscar/data/sreda/mabdelat/LLM4TB/output/sft/qwen2.5-coder_full_sft_r1024_a1024_completion_only_loss_full_data_msl_6028/qwen2.5-coder_full_sft_r1024_a1024_completion_only_loss_full_data_msl_6028_20260505_231356/Qwen/Qwen2.5-Coder-7B-Instruct_finetuned"
+# hub_id = "manarabdelatty/qwen2.5-coder-covr-completion-only-loss-r1024-merged_msl_6028"
+
+# adapter="/oscar/data/sreda/mabdelat/LLM4TB/output/sft/qwen2.5-coder_full_sft_r1024_a1024_completion_only_loss_full_data_msl_8028/qwen2.5-coder_full_sft_r1024_a1024_completion_only_loss_full_data_msl_8028_20260505_230008/Qwen/Qwen2.5-Coder-7B-Instruct_finetuned"
+# hub_id = "manarabdelatty/qwen2.5-coder-covr-completion-only-loss-r1024-merged_msl_8028"
+
+base = "Qwen/Qwen3-4B-Instruct-2507"
+
+# adapter = "/oscar/data/sreda/mabdelat/LLM4TB/output/sft/qwen4b_instruct_full_sft_r1024_a1024_completion_only_loss_full_data_msl_6028/qwen4b_instruct_full_sft_r1024_a1024_completion_only_loss_full_data_msl_6028_20260505_232518/Qwen/Qwen3-4B-Instruct-2507_finetuned"
+# hub_id = "manarabdelatty/qwen4b-instruct-covr-completion-only-loss-r1024-msl-6028"
+
+adapter = "/oscar/data/sreda/mabdelat/LLM4TB/output/sft/qwen4b_instruct_full_sft_r1024_a1024_completion_only_loss_full_data_msl_8028/qwen4b_instruct_full_sft_r1024_a1024_completion_only_loss_full_data_msl_8028_20260505_232208/Qwen/Qwen3-4B-Instruct-2507_finetuned"
+hub_id = "manarabdelatty/qwen4b-instruct-covr-completion-only-loss-r1024-msl-8028"
+
+
+model = AutoModelForCausalLM.from_pretrained(
+    base,
+    torch_dtype=torch.bfloat16,
+    device_map="auto",
+)
+
+model = PeftModel.from_pretrained(model, adapter)
+model = model.merge_and_unload()
+
+tokenizer = AutoTokenizer.from_pretrained(base)
+
+model.push_to_hub(hub_id, private=True, safe_serialization=True)
+tokenizer.push_to_hub(hub_id, private=True)

@@ -1,0 +1,52 @@
+DATASET:
+  SHUFFLE: True
+  TRAIN: "/oscar/data/sreda/mabdelat/LLM4TB/output/data_merged_all/all_merged_deduplicated.jsonl"
+  
+tokenizer:
+  padding_side: 'right'
+  use_fast: False 
+
+LLM:
+  NAME: 'qwen2.5-coder'
+  TEMP: 0.1
+
+lora:
+  lora_r: 512 
+  lora_alpha: 512 
+  lora_dropout: 0.1 
+  use_dora: False 
+  
+bnb: 
+  load_in_4bit: True 
+  bnb_4bit_quant_type: "nf4"
+  bnb_4bit_use_double_quant: True 
+  
+train:
+  epochs: -1
+  max_steps: 500               # make it -1 to use epochs
+  max_seq_length: 4028
+  max_prompt_length: 1028
+  loss_type: dapo
+  beta: 0.01
+  batch_size: 8
+  gradient_accumulation_steps: 2  # your effective batch size is batch_size*gradient_accumulation_steps
+  num_generations: 8   
+  max_data_set_size: 1000          
+  learning_rate: 2e-7
+  report_to: "wandb"
+  gradient_checkpointing: True   ## Leads to reduction in memory but slows down training by 20% 
+  dataloader_num_workers: 0
+  evaluation_strategy: 'steps'
+  logging_strategy: 'steps'
+  save_strategy: 'steps'
+  logging_steps: 1
+  eval_steps: 100000
+  save_steps: 100
+  load_best_model_at_end: False
+  lr_scheduler_type: 'constant_with_warmup'
+  warmup_steps: 25
+  run_name: qwen2.5-coder_grpo_single_gpu_4bit
+
+test:
+  batch_size: 8
+  num_samples: 10 # n for computing acc@k
