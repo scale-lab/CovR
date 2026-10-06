@@ -199,4 +199,4 @@ jobs/               Experiment and Slurm launch scripts
 
 ## License
 
-A repository license has not yet been added. Base models and third-party datasets remain subject to their respective licenses.
+This project is licensed under the [MIT License](LICENSE). Base models and third-party datasets remain subject to their respective licenses.
