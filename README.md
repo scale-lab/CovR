@@ -122,6 +122,24 @@ Review [jobs/sft](jobs/sft) for the experiment launchers and their environment r
 
 The GRPO entry point is [core/train/grpo.py](core/train/grpo.py). Configurations are under [core/train/cfg/experiments/grpo](core/train/cfg/experiments/grpo), and experiment launchers are under [jobs/grpo](jobs/grpo).
 
+Example command (Qwen3-4B, run inside a GPU allocation with Synopsys VCS/URG available):
+
+```bash
+python core/train/grpo.py \
+  --config core/train/cfg/experiments/grpo/qwen4b_instruct/qwen4b_instruct_r512_grpo_unsloth.yaml \
+  --run_name covr_qwen3_4b_grpo \
+  --sft ./output/sft/covr_qwen3_4b_sft/Qwen/Qwen3-4B-Instruct-2507_finetuned \
+  --use_vllm \
+  --vllm_mode colocate \
+  --with_reasoning \
+  --max_workers 32 \
+  --loss_type grpo \
+  --use_sloth \
+  train.max_steps=1000
+```
+
+`--sft` points to the SFT output from the previous step, and trailing `key=value` arguments override entries in the YAML config. The full Slurm launcher is [jobs/grpo/qwen4b-instruct/grpo_unsloth.sh](jobs/grpo/qwen4b-instruct/grpo_unsloth.sh).
+
 GRPO starts from an SFT checkpoint and uses simulation-derived rewards. Configure the SFT checkpoint, dataset, simulator, coverage tools, and compute resources before launching. The supplied job scripts are cluster-specific experiment references.
 
 ## Repository Structure
