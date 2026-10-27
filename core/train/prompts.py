@@ -20,6 +20,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+# The prompts below are adapted from LLM4Cov:
+#   arXiv:2602.16953, https://arxiv.org/abs/2602.16953
 USER_PROMPT_SECTIONED = lambda natural_spec, rtl_code, context: f"""
 <spec>
 {natural_spec}
